@@ -9,7 +9,7 @@ use Yajra\DataTables\Facades\DataTables;
 class EmployeeIndex extends Component
 {
     public $employees, $name, $position, $address, $gender, $status, $employees_id;
-    public $isModalOpen = 0;
+    public $isModalOpen = true;
 
     public function render()
     {

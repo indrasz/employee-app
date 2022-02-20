@@ -26,7 +26,7 @@
                     </x-button>
                     
                     @if($isModalOpen)
-                    @include('livewire.employee.create')
+                        @include('livewire.employee.create')
                     @endif
 
                     <div class="flex flex-col">

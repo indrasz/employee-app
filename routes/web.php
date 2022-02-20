@@ -23,13 +23,9 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::name('dashboard.')->prefix('dashboard')->group(function () {
-
         Route::get('/', [DashboardController::class, 'index'])->name('index');
-
         Route::resource('employee', EmployeeController::class);
-
-        Route::get('employees', EmployeeIndex::class)->name('employee-livewire');
-        
+        Route::get('employees', EmployeeIndex::class)->name('employee-livewire');       
         Route::get('students', Crud::class);
     });
 });
