@@ -1,44 +1,19 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Emloyee') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-     <x-slot name="script">
-        <script>
-            // AJAX DataTable
-            var datatable = $('#crudTable').DataTable({
-                ajax: {
-                    url: '{!! url()->current() !!}',
-                },
-                columns: [
-                    { data: 'id', name: 'id', width: '5%'},
-                    { data: 'name', name: 'name' },
-                    { data: 'position', name: 'position' },
-                    { data: 'gender', name: 'gender' },
-                    { data: 'status', name: 'status' },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        width: '20%'
-                    },
-                ],
-            });
-            
-        </script>
-
-    </x-slot>
+@section('content')
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            
             <div class="mb-10">
                 <a href="{{ route('dashboard.employee.create') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
                     + Tambah Data Karyawan
                 </a>
+                <a href="{{ route('dashboard.download-pdf') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg ml-3">
+                    Download PDF
+                </a>
             </div>
+            
             <div class="shadow overflow-hidden sm:rounded-md">
                 <div class="px-4 py-5 bg-white sm:p-6">
                     <table id="crudTable">
@@ -56,9 +31,38 @@
                     </table>
                 </div>
             </div>
+            
         </div>
     </div> 
+    
+    @push('addon-script')
 
+        <script>
+            // AJAX DataTable
+            var datatable = $('#crudTable').DataTable({
+                ajax: {
+                    url: '{!! url()->current() !!}',
+                },
+                columns: [
+                    { data: 'id', name: 'id', width: '5%'},
+                    { data: 'name', name: 'name' },
+                    { data: 'position', name: 'position' },
+                    { data: 'gender', name: 'gender' },
+                    { data: 'status', name: 'status' },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        width: '28%'
+                    },
+                ],
+            });
+            
+        </script>
+
+    @endpush
+   
 
     {{-- <div class="ml-7 mt-7 ">
         <a href="{{ route('dashboard.employee.create') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
@@ -119,4 +123,8 @@
             </div>
         </div>
     </div> --}}
-</x-app-layout>
+
+
+    
+@endsection
+

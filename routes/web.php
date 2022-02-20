@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Livewire\Crud;
+use App\Http\Livewire\EmployeeIndex;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Livewire\EmployeeIndex;
+use App\Http\Controllers\GalleryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +25,12 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::name('dashboard.')->prefix('dashboard')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('index');
+        Route::get('/pdf', [DashboardController::class, 'downloadPdf'])->name('download-pdf');
         Route::resource('employee', EmployeeController::class);
-        Route::get('employees', EmployeeIndex::class)->name('employee-livewire');       
+        Route::resource('employee.gallery', GalleryController::class)->only([
+            'create', 'store'
+        ]);
+        Route::get('employees', EmployeeIndex::class)->name('employee-livewire');      
         Route::get('students', Crud::class);
     });
 });

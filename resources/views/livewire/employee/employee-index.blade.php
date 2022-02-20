@@ -1,7 +1,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Emloyee Livewire') }}
+            {{ __('Livewire') }}
         </h2>
     </x-slot>
 
@@ -79,16 +79,19 @@
                                             <td>
                                                 <a href="{{ route('dashboard.employee.show', $employee->id) }}">
                                                     <x-button class="bg-blue-500 hover:bg-blue-700">
-                                                        {{ __('Show') }}
+                                                        <i class="material-icons-outlined text-base">visibility</i>
+                                                       
                                                     </x-button>
                                                 </a>
                                                 
-                                                <x-button wire:click="edit({{ $employee->id }})">
-                                                    {{ __('Edit') }}
+                                                <x-button class="inline-block text-center"  wire:click="edit({{ $employee->id }})" >
+                                                    
+                                                    <i class="material-icons-outlined text-base">edit</i>
+                                                    
                                                 </x-button>
 
-                                                <x-button wire:click="delete({{ $employee->id }})" class="bg-red-500 hover:bg-red-700">
-                                                    {{ __('Delete') }}
+                                                <x-button wire:click="alertConfirm({{ $employee->id }})" class="bg-red-500 hover:bg-red-700">
+                                                    <i class="material-icons-round text-base">delete_outline</i>
                                                 </x-button>
                                                 
 
@@ -107,3 +110,34 @@
             </div>
         </div>
     </div>
+
+    
+
+    <x-slot name="script">
+        <script>
+            window.addEventListener('swal:modal', event => { 
+                swal({
+                  title: event.detail.message,
+                  text: event.detail.text,
+                  icon: event.detail.type,
+                });
+            });
+              
+            window.addEventListener('swal:confirm', event => { 
+                swal({
+                  title: event.detail.message,
+                  text: event.detail.text,
+                  icon: event.detail.type,
+                  buttons: true,
+                  dangerMode: true,
+                })
+                .then((willDelete) => {
+                  if (willDelete) {
+                    window.livewire.emit('delete', event.detail.id);
+                  }
+                });
+            });
+                
+        </script>
+    </x-slot>
+

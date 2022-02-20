@@ -26,10 +26,12 @@ class EmployeeRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
+            'email' => 'required|max:255',
             'position' => 'required|max:255',
             'address' => 'required|max:255',
             'gender' => 'required|max:255',
             'status' => 'required|max:255',
+            'files.*' => 'required|image',
         ];
     }
 }

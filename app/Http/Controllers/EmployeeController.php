@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use PDF;
 use App\Http\Requests\EmployeeRequest;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -21,10 +22,24 @@ class EmployeeController extends Controller
             return DataTables::of($query)
                 ->addColumn('action', function ($item) {
                     return '
-                    <a class="inline-block border border-blue-700 bg-blue-700 text-white rounded-md px-2 py-1 m-1 transition duration-500 ease select-none hover:bg-blue-800 focus:outline-none focus:shadow-outline" 
-                        href="' . route('dashboard.employee.show',  $item->id) . '">
-                        show
-                    </a>
+                    <div class="relative inline-block text-left">
+                        <div x-data="{ show: false }"  @click.away="show = false" class="mb-2">
+                            <button @click="show = ! show" type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                            Options
+                            <!-- Heroicon name: solid/chevron-down -->
+                            <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                            </button>
+                            <div x-show="show" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div class="py-1" role="none">
+                                    <a class="text-gray-700 hover:bg-gray-100 block px-4 py-2 text-sm" href="' . route('dashboard.employee.show',  $item->id) . '">Show</a>
+                                    <a class="text-gray-700 hover:bg-gray-100 block px-4 py-2 text-sm" href="' . route('dashboard.employee.gallery.create', $item->id) . '">Gallery</a>
+                                </div>
+                            </div>
+                        </div>
+  
+                    </div>
                     <a class="inline-block border border-gray-700 bg-gray-700 text-white rounded-md px-2 py-1 m-1 transition duration-500 ease select-none hover:bg-gray-800 focus:outline-none focus:shadow-outline" 
                         href="' . route('dashboard.employee.edit',  $item->id) . '">
                         Edit
@@ -36,6 +51,8 @@ class EmployeeController extends Controller
                         </button>
                         ' . method_field('delete') . csrf_field() . '
                     </form>
+
+                    
                 
                     ';                   
                 })
@@ -65,8 +82,9 @@ class EmployeeController extends Controller
     {
         $data = $request->all();
         Employee::create($data);
-
-        return redirect()->route('dashboard.employee.index');
+        
+       
+        return redirect()->route('dashboard.employee.index')->with('success', 'Task Created Successfully!');
     }
 
     /**
@@ -120,6 +138,6 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findorFail($id);
         $employee->delete();
-        return redirect()->route('dashboard.employee.index');
+        return redirect()->route('dashboard.employee.index')->with('success', 'Task Deleted Successfully!');
     }
 }

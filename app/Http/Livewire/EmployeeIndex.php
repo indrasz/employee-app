@@ -9,7 +9,8 @@ use Yajra\DataTables\Facades\DataTables;
 class EmployeeIndex extends Component
 {
     public $employees, $name, $position, $address, $gender, $status, $employees_id;
-    public $isModalOpen = true;
+    protected $listeners = ['delete'];
+    public $isModalOpen = 0;
 
     public function render()
     {
@@ -36,6 +37,7 @@ class EmployeeIndex extends Component
 
     private function resetCreateForm(){
         $this->name = '';
+        $this->email = '';
         $this->position = '';
         $this->address = '';
         $this->gender = '';
@@ -46,6 +48,7 @@ class EmployeeIndex extends Component
     {
         $this->validate([
             'name' => 'required',
+            'email' => 'required',
             'position' => 'required',
             'address' => 'required',
             'gender' => 'required',
@@ -54,14 +57,20 @@ class EmployeeIndex extends Component
     
         Employee::updateOrCreate(['id' => $this->employees_id], [
             'name' => $this->name,
+            'email' => $this->email,
             'position' => $this->position,
             'address' => $this->address,
             'gender' => $this->gender,
             'status' => $this->status,
         ]);
 
-        session()->flash('message', $this->employees_id ? 'Employee updated.' : 'Employee created.');
-
+         
+        $this->dispatchBrowserEvent('swal:modal', [
+            'type' => 'success',  
+            'message' => $this->employees_id ? 'Employee Updated Successfully!' : 'Employee Created Successfully!', 
+            'text' => 'It will not list on users table soon.'
+        ]);
+        
         $this->closeModalPopover();
         $this->resetCreateForm();
     }
@@ -71,6 +80,7 @@ class EmployeeIndex extends Component
         $employee = Employee::findOrFail($id);
         $this->employees_id = $id;
         $this->name = $employee->name;
+        $this->email = $employee->email;
         $this->position = $employee->position;
         $this->address = $employee->address;
         $this->gender = $employee->gender;
@@ -78,11 +88,27 @@ class EmployeeIndex extends Component
     
         $this->openModalPopover();
     }
+
+    public function alertConfirm($id)
+    {
+        $this->dispatchBrowserEvent('swal:confirm', [
+                'type' => 'warning',  
+                'message' => 'Are you sure?', 
+                'text' => 'If deleted, you will not be able to recover this imaginary file!',
+                'id' => $id,
+        ]);
+    }
     
     public function delete($id)
     {
         Employee::find($id)->delete();
-        session()->flash('message', 'Employee deleted.');
+
+        $this->dispatchBrowserEvent('swal:modal', [
+            'type' => 'success',  
+            'message' => 'Employee Delete Successfully!', 
+            'text' => 'It will not list on users table soon.'
+        ]); 
+        
     }
 
 }

@@ -10,6 +10,11 @@ class Employee extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'position', 'address', 'gender', 'status'
+        'name', 'email', 'position', 'address', 'gender', 'status', 'photo_url'
     ];
+
+    public function galleries()
+    {
+        return $this->hasMany(GalleryEmployee::class, 'employee_id', 'id');
+    }
 }
